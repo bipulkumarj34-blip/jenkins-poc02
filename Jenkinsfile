@@ -6,7 +6,8 @@ pipeline {
     }
 
     environment {
-        // Namespace the image with your name
+        // This adds the Rancher Desktop bin folder to the system PATH for this build
+        PATH = "/Users/bjha/.rd/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:${env.PATH}"
         MY_NAME = "bjha"
         IMAGE_NAME = "nginx-poc"
     }
@@ -14,8 +15,9 @@ pipeline {
     stages {
         stage('Preparation') {
             steps {
+                // Verify docker is accessible now
+                sh "docker --version"
                 echo "Preparing build for ${params.BRANCH}..."
-                // Use sed to swap the placeholder with the actual Jenkins build number
                 sh "sed -i '' 's/##BUILD_NUMBER##/${env.BUILD_NUMBER}/g' index.html"
             }
         }
