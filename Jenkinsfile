@@ -22,6 +22,16 @@ pipeline {
             }
         }
 
+        stages {
+        stage('Cleanup Old Container') {
+            steps {
+                echo "🧹 Cleaning up any old containers..."
+                // The '|| true' ensures the pipeline doesn't fail if the container isn't there
+                sh "docker stop ${env.CONTAINER_NAME} || true"
+                sh "docker rm ${env.CONTAINER_NAME} || true"
+            }
+        }
+
         stage('Quality Check (Parallel)') {
             parallel {
                 stage('Validate Files') {
